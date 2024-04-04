@@ -1,7 +1,9 @@
 from typing import Union
 from fastapi import FastAPI
-from services.IsBipartitionGraph import isBipartitionGraph
+from services.IsBipartitionGraph import find_components_and_check_bipartite,convertir_a_lista_de_adyacencia
+
 import logging
+from GraphsExaples import graph1
 
 logger = logging.getLogger("myapp")
 logging.basicConfig(level=logging.INFO)
@@ -10,36 +12,21 @@ app = FastAPI()
 
 
 @app.get("/")
-def read_root():
+def IsBipartition():
     graph = dict()
     logger.info("Accediendo a la ruta raíz")
-    graph = {
-        "name": "grafo 2",
-        "nodes": [
-  { "id": '1', "type": 'default', "data": { "label": '' }, "position": { "x": 100, "y": 50 }, "style": { "backgroundColor": 'white', "borderColor": 'white' } },
-  { "id": '2', "type": 'default', "data": { "label": '' }, "position": { "x": 200, "y": 50 }, "style": { "backgroundColor": 'white', "borderColor": 'white' } },
-  { "id": '3', "type": 'default', "data": { "label": '' }, "position": { "x": 300, "y": 50 }, "style": { "backgroundColor": 'white', "borderColor": 'white' } },
-  { "id": '4', "type": 'default', "data": { "label": '' }, "position": { "x": 100, "y": 150 }, "style": { "backgroundColor": 'white', "borderColor": 'white' } },
-  { "id": '5', "type": 'default', "data": { "label": '' }, "position": { "x": 300, "y": 150 }, "style": { "backgroundColor": 'white', "borderColor": 'white' } },
-  { "id": '6', "type": 'default', "data": { "label": '' }, "position": { "x": 200, "y": 250 }, "style": { "backgroundColor": 'white', "borderColor": 'white' } },
-],
-        "edges": [
-  { "id": "e1-2", "source": "1", "target": "2" },
-  { "id": "e2-3", "source": "2", "target": "3" },
-  { "id": "e1-4", "source": "1", "target": "4" },
- {"id": "e1-5", "source": "1", "target": "5"},
-  { "id": "e4-6", "source": "4", "target": "6" },
-  { "id": "e6-5", "source": "6", "target": "5" },
-  { "id": "e5-3", "source": "5", "target": "3" },
-  { "id": "e2-6", "source": "2", "target": "6" }
-],
-        "nodesNumber": 6,
-        "isConnected": True,
-        "isComplete": False,
-        "isWeighted": False,
-        "isDirected": False
-    }
-    return {"Graph": isBipartitionGraph(graph)}
+    graph = graph1
+    logger.info(f"Marlon components graph : ")
+    lista_adyacencia = convertir_a_lista_de_adyacencia(graph1)
+    print(f"El grafo, listas de adyacencia: {lista_adyacencia}")
+    # Encontrar componentes y verificar bipartición
+    componentes, es_bipartito, sets = find_components_and_check_bipartite(lista_adyacencia)
+
+    return {"Grafo": graph1["name"],
+            "Es_Bipartito": es_bipartito,
+            "Conjuntos_bipartition": sets,
+            "Componentes/Subgrafos": componentes
+            }
 
 
 @app.get("/items/{item_id}")

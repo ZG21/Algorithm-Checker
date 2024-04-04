@@ -3,35 +3,58 @@ import logging
 logger = logging.getLogger("myapp")
 logging.basicConfig(level=logging.INFO)
 # Inicializar conjuntos y un conjunto para llevar registro de los nodos visitados
-set1, set2, visited = set(), set(), set()
-
-def dfs(node, current_set,graph):
-    # Marcar el nodo como visitado
+componentes = []
+set1, set2, visited, componente = set(), set(), set(), set()
+# Aca funciones para revisar si un grafo es conexo o disconexo y devolver las componentes
+def convertir_a_lista_de_adyacencia(graph):
+    lista_adyacencia = {node['id']: [] for node in graph['nodes']}
+    for edge in graph['edges']:
+        lista_adyacencia[edge['source']].append(edge['target'])
+        # Asumiendo un grafo no dirigido:
+        lista_adyacencia[edge['target']].append(edge['source'])
+    return lista_adyacencia
+# DFS1 esta realizando la operacion que me devuelve las componentes del grafo
+# es decir los subgrafos
+def dfs1(node, graph, visited, component):
     visited.add(node)
-    # Agregar el nodo al conjunto actual
-    current_set.add(node)
-    # Determinar el conjunto opuesto
-    opposite_set = set2 if current_set is set1 else set1
-    # Recorrer todos los nodos adyacentes
+    component.append(node)
     for neighbour in graph.get(node, []):
-        # Si el vecino no ha sido visitado, aplicar DFS recursivamente
         if neighbour not in visited:
-            dfs(neighbour, opposite_set,graph)
-    return {"Conjunto 1": set1, "Conjunto 2":set2}
-def isBipartitionGraph(g):
-    # Convertir la lista de aristas en un diccionario para facilitar la búsqueda de adyacencias
-    graph = {}
-    resps = []
-    for edge in g["edges"]:
-        graph.setdefault(edge['source'], []).append(edge['target'])
-        graph.setdefault(edge['target'], []).append(edge['source'])
-    # Aplicar DFS a cada nodo no visitado
-    for node in g["nodes"]:
-        if node['id'] not in visited:
-            resps.append(dfs(node['id'], set1, graph))
-    updateNodeStyles(g,set1,set2)
-    return {"resp":resps, "graph": updateNodeStyles(g,set1,set2)}
+            dfs1(neighbour, graph, visited, component)
 
+def is_bipartite_dfs(node, graph, color, c, set1, set2):
+    if node in color:
+        return color[node] == c
+    color[node] = c
+    if c:
+        set1.add(node)
+    else:
+        set2.add(node)
+    for neighbour in graph.get(node, []):
+        if not is_bipartite_dfs(neighbour, graph, color, not c, set1, set2):
+            return False
+    return True
+
+def find_components_and_check_bipartite(graph):
+    visited = set()
+    components = []
+    color = {}
+    sets = []  # Lista para almacenar los conjuntos de nodos bipartitos
+    is_bipartite = True
+
+    for node in graph:
+        if node not in visited:
+            component = []
+            set1, set2 = set(), set()  # Conjuntos para los dos "colores"
+            dfs1(node, graph, visited, component)
+            components.append(component)
+            if not is_bipartite_dfs(node, graph, color, True, set1, set2):
+                is_bipartite = False
+                break  # Un componente no bipartito es suficiente para detener el proceso
+            sets.append([set1, set2])  # Agregar los conjuntos de este componente
+
+    return components, is_bipartite, sets
+# Fin funciones conexo/disconexo
 
 def updateNodeStyles(graph, set1, set2):
     # Iterar a través de todos los nodos en el grafo
