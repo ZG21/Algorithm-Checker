@@ -11,7 +11,7 @@ def convertir_a_lista_de_adyacencia(graph):
     for edge in graph['edges']:
         lista_adyacencia[edge['source']].append(edge['target'])
         # Asumiendo un grafo no dirigido:
-        lista_adyacencia[edge['target']].append(edge['source'])
+        #lista_adyacencia[edge['target']].append(edge['source'])
     return lista_adyacencia
 # DFS1 esta realizando la operacion que me devuelve las componentes del grafo
 # es decir los subgrafos
