@@ -26,7 +26,6 @@ def IsBipartition():
         subsets_iteration = []
         add_subsets(key, values, subsets_iteration, lista_adyacencia)
         subsets.extend(subsets_iteration)
-    print(f"Jeronimo Subsets {subsets}")
     # Encontrar componentes y verificar bipartición
     componentes, es_bipartito, sets = find_components_and_check_bipartite(lista_adyacencia)
 
