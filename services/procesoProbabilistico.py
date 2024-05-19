@@ -140,9 +140,6 @@ def sorted_dict(dict):
     if contiene_guion:
         clave_concatenada += '-'
 
-    print(f"jeronimo clave_concatenada {clave_concatenada}")
-    print(f"jeronimo valor_concatenado {valor_concatenado}")
-
     # Crear el nuevo diccionario con la clave y valor concatenados
     nuevo_diccionario = {clave_concatenada: valor_concatenado}
 
@@ -152,38 +149,25 @@ def sorted_dict(dict):
 # Función para combinar y ordenar claves y valores
 def combine_and_sort_keys(data):
     sorted_data = []
-    dict_matrix = {
+    dict_post_soted = {
         "future": {},
         "actual": {},
     }
     for item in data:
-        dict_part, value = item
+        dict_part, valueData = item
         # Filtrar las llaves que no terminan en un guión
         for key, value in dict_part.items():
             if key.endswith('-'):
-                dict_matrix["future"][key] = value
+                dict_post_soted["future"][key] = value
             else:
-                dict_matrix["actual"][key] = value
-        print(f"jeronimo dict_matrix ACTUAL {dict_matrix['actual']}")
-        print(f"jeronimo sorted_dict('Actual']) {sorted_dict(dict_matrix['actual'])}")
-        print(f"jeronimo dict_matrix FUTURE {dict_matrix['future']}")
-        print(f"jeronimo sorted_dict('Future']) {sorted_dict(dict_matrix['future'])}")
-        
-        filtered_keys = [key for key in dict_part.keys() if not key.endswith('-')]
-        # Ordenar las llaves filtradas alfabéticamente
-        sorted_keys = sorted(filtered_keys)
-        # Concatenar las llaves y sus valores correspondientes
-        combined_key = ''.join(sorted_keys)
-        combined_value = ''.join([dict_part[key] for key in sorted_keys])
-        # Crear nuevo diccionario con la clave combinada
-        new_dict = {combined_key: combined_value}
-        # Añadir las llaves y valores que terminan en guión sin modificar
-        for key in dict_part.keys():
-            if key.endswith('-'):
-                new_dict[key] = dict_part[key]
-        # Añadir el nuevo diccionario y el valor asociado a la lista resultante
-        sorted_data.append([new_dict, value])
+                dict_post_soted["actual"][key] = value
+        sorted_data.append({
+            "actual":sorted_dict(dict_post_soted['actual']),
+            "future":sorted_dict(dict_post_soted['future']),
+            "value": valueData
+            })
     return sorted_data
+
 
 resultados = procesar_matriz(TMP, actual, futuro)
 # print("Matriz marginalizada:")
@@ -197,5 +181,6 @@ matrix, costo = multiplicar_vectores(resultados, resultados1)
 resultado, costo = multiplicar_elementos(matrix, TMP)
 # print("Resultado de la comparacion con la matriz original:")
 sortedVector = combine_and_sort_keys(resultado)
+print(f"Jeronimo sortedVector: {sortedVector}")
 # print(len(resultado),sortedVector ,"\n",costo,resultado)
 
