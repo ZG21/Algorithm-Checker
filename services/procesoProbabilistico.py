@@ -1,69 +1,4 @@
-TMP = datos_actualizados = [
-    {"ABC": "000", "ABC-": "000", "value": 1},
-    {"ABC": "000", "ABC-": "001", "value": 0},
-    {"ABC": "000", "ABC-": "010", "value": 0},
-    {"ABC": "000", "ABC-": "011", "value": 0},
-    {"ABC": "000", "ABC-": "100", "value": 0},
-    {"ABC": "000", "ABC-": "101", "value": 0},
-    {"ABC": "000", "ABC-": "110", "value": 0},
-    {"ABC": "000", "ABC-": "111", "value": 0},
-    {"ABC": "001", "ABC-": "000", "value": 0},
-    {"ABC": "001", "ABC-": "001", "value": 0},
-    {"ABC": "001", "ABC-": "010", "value": 0},
-    {"ABC": "001", "ABC-": "011", "value": 0},
-    {"ABC": "001", "ABC-": "100", "value": 1},
-    {"ABC": "001", "ABC-": "101", "value": 0},
-    {"ABC": "001", "ABC-": "110", "value": 0},
-    {"ABC": "001", "ABC-": "111", "value": 1},
-    {"ABC": "010", "ABC-": "000", "value": 0},
-    {"ABC": "010", "ABC-": "001", "value": 0},
-    {"ABC": "010", "ABC-": "010", "value": 0},
-    {"ABC": "010", "ABC-": "011", "value": 0},
-    {"ABC": "010", "ABC-": "100", "value": 0},
-    {"ABC": "010", "ABC-": "101", "value": 1},
-    {"ABC": "010", "ABC-": "110", "value": 0},
-    {"ABC": "010", "ABC-": "111", "value": 0},
-    {"ABC": "011", "ABC-": "000", "value": 0},
-    {"ABC": "011", "ABC-": "001", "value": 0},
-    {"ABC": "011", "ABC-": "010", "value": 0},
-    {"ABC": "011", "ABC-": "011", "value": 0},
-    {"ABC": "011", "ABC-": "100", "value": 0},
-    {"ABC": "011", "ABC-": "101", "value": 1},
-    {"ABC": "011", "ABC-": "110", "value": 0},
-    {"ABC": "011", "ABC-": "111", "value": 0},
-    {"ABC": "100", "ABC-": "000", "value": 0},
-    {"ABC": "100", "ABC-": "010", "value": 0},
-    {"ABC": "100", "ABC-": "001", "value": 1},
-    {"ABC": "100", "ABC-": "011", "value": 0},
-    {"ABC": "100", "ABC-": "100", "value": 0},
-    {"ABC": "100", "ABC-": "101", "value": 0},
-    {"ABC": "100", "ABC-": "110", "value": 0},
-    {"ABC": "100", "ABC-": "111", "value": 0},
-    {"ABC": "101", "ABC-": "000", "value": 0},
-    {"ABC": "101", "ABC-": "001", "value": 0},
-    {"ABC": "101", "ABC-": "010", "value": 0},
-    {"ABC": "101", "ABC-": "011", "value": 0},
-    {"ABC": "101", "ABC-": "100", "value": 0},
-    {"ABC": "101", "ABC-": "101", "value": 0},
-    {"ABC": "101", "ABC-": "110", "value": 0},
-    {"ABC": "101", "ABC-": "111", "value": 1},
-    {"ABC": "110", "ABC-": "000", "value": 0},
-    {"ABC": "110", "ABC-": "001", "value": 0},
-    {"ABC": "110", "ABC-": "010", "value": 0},
-    {"ABC": "110", "ABC-": "011", "value": 0},
-    {"ABC": "110", "ABC-": "100", "value": 1},
-    {"ABC": "110", "ABC-": "101", "value": 0},
-    {"ABC": "110", "ABC-": "110", "value": 0},
-    {"ABC": "110", "ABC-": "111", "value": 0},
-    {"ABC": "111", "ABC-": "000", "value": 0},
-    {"ABC": "111", "ABC-": "001", "value": 0},
-    {"ABC": "111", "ABC-": "010", "value": 0},
-    {"ABC": "111", "ABC-": "011", "value": 0},
-    {"ABC": "111", "ABC-": "100", "value": 0},
-    {"ABC": "111", "ABC-": "101", "value": 0},
-    {"ABC": "111", "ABC-": "110", "value": 1},
-    {"ABC": "111", "ABC-": "111", "value": 0}
-]
+from TMP import TMP
 actual = [2,1]
 futuro = [0]
 
@@ -263,9 +198,4 @@ resultado, costo = multiplicar_elementos(matrix, TMP)
 # print("Resultado de la comparacion con la matriz original:")
 sortedVector = combine_and_sort_keys(resultado)
 # print(len(resultado),sortedVector ,"\n",costo,resultado)
-
-
-{'BC': '00', 'A': '1'}
-{"BCA": "001"}
-{"BAC": "010"}
 
