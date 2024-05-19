@@ -154,7 +154,6 @@ def multiplicar_vectores(vector1, vector2):
             multiplicacion_valor = elem1[1] * elem2[1]
             costo = costo + multiplicacion_valor
             resultado.append([multiplicacion, multiplicacion_valor])
-    print("jeronimo resultado: ", resultado)
 
     return resultado, costo
 
