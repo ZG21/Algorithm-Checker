@@ -1,7 +1,7 @@
 from typing import Union
 from fastapi import FastAPI
 from services.IsBipartitionGraph import find_components_and_check_bipartite,convertir_a_lista_de_adyacencia
-
+from services.procesoProbabilistico import separar_diccionario
 from Subsets import add_subsets
 
 import logging
@@ -20,13 +20,25 @@ def IsBipartition():
     graph = graph1
     logger.info(f"Marlon components graph : ")
     lista_adyacencia = convertir_a_lista_de_adyacencia(graph1)
+    print("momo",lista_adyacencia)
     subsets = []
-
+    indices = separar_diccionario(lista_adyacencia)
+    print("momo 2 indice", indices)
     for key, values in lista_adyacencia.items():
         subsets_iteration = []
         add_subsets(key, values, subsets_iteration, lista_adyacencia)
         subsets.extend(subsets_iteration)
     # Encontrar componentes y verificar bipartición
+    print(subsets)
+    """for component in subsets:
+        actual = []
+        futuro = []
+        
+        if component.keys() and component.keys() == "subset":
+            actual = component.value()
+            print("Momo", actual)"""
+
+    #print("Momo subsets",subsets)
     componentes, es_bipartito, sets = find_components_and_check_bipartite(lista_adyacencia)
 
     return {"Grafo": graph1["name"],
