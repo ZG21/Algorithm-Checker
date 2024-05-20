@@ -1,0 +1,17 @@
+{
+  "jeronimo_vertex": {
+    "id": "1",
+    "type": "default",
+    "data": {
+      "label": "A"
+    },
+    "position": {
+      "x": 100,
+      "y": 50
+    },
+    "style": {
+      "backgroundColor": "white",
+      "borderColor": "white"
+    }
+  }
+}
