@@ -1,9 +1,88 @@
-from TMP import TMP
-actual = [2,1]
-futuro = [0]
+TMP = datos_actualizados = [
+    {"ABC": "000", "ABC-": "000", "value": 1},
+    {"ABC": "000", "ABC-": "001", "value": 0},
+    {"ABC": "000", "ABC-": "010", "value": 0},
+    {"ABC": "000", "ABC-": "011", "value": 0},
+    {"ABC": "000", "ABC-": "100", "value": 0},
+    {"ABC": "000", "ABC-": "101", "value": 0},
+    {"ABC": "000", "ABC-": "110", "value": 0},
+    {"ABC": "000", "ABC-": "111", "value": 0},
+    {"ABC": "001", "ABC-": "000", "value": 0},
+    {"ABC": "001", "ABC-": "001", "value": 0},
+    {"ABC": "001", "ABC-": "010", "value": 0},
+    {"ABC": "001", "ABC-": "011", "value": 0},
+    {"ABC": "001", "ABC-": "100", "value": 1},
+    {"ABC": "001", "ABC-": "101", "value": 0},
+    {"ABC": "001", "ABC-": "110", "value": 0},
+    {"ABC": "001", "ABC-": "111", "value": 1},
+    {"ABC": "010", "ABC-": "000", "value": 0},
+    {"ABC": "010", "ABC-": "001", "value": 0},
+    {"ABC": "010", "ABC-": "010", "value": 0},
+    {"ABC": "010", "ABC-": "011", "value": 0},
+    {"ABC": "010", "ABC-": "100", "value": 0},
+    {"ABC": "010", "ABC-": "101", "value": 1},
+    {"ABC": "010", "ABC-": "110", "value": 0},
+    {"ABC": "010", "ABC-": "111", "value": 0},
+    {"ABC": "011", "ABC-": "000", "value": 0},
+    {"ABC": "011", "ABC-": "001", "value": 0},
+    {"ABC": "011", "ABC-": "010", "value": 0},
+    {"ABC": "011", "ABC-": "011", "value": 0},
+    {"ABC": "011", "ABC-": "100", "value": 0},
+    {"ABC": "011", "ABC-": "101", "value": 1},
+    {"ABC": "011", "ABC-": "110", "value": 0},
+    {"ABC": "011", "ABC-": "111", "value": 0},
+    {"ABC": "100", "ABC-": "000", "value": 0},
+    {"ABC": "100", "ABC-": "010", "value": 0},
+    {"ABC": "100", "ABC-": "001", "value": 1},
+    {"ABC": "100", "ABC-": "011", "value": 0},
+    {"ABC": "100", "ABC-": "100", "value": 0},
+    {"ABC": "100", "ABC-": "101", "value": 0},
+    {"ABC": "100", "ABC-": "110", "value": 0},
+    {"ABC": "100", "ABC-": "111", "value": 0},
+    {"ABC": "101", "ABC-": "000", "value": 0},
+    {"ABC": "101", "ABC-": "001", "value": 0},
+    {"ABC": "101", "ABC-": "010", "value": 0},
+    {"ABC": "101", "ABC-": "011", "value": 0},
+    {"ABC": "101", "ABC-": "100", "value": 0},
+    {"ABC": "101", "ABC-": "101", "value": 0},
+    {"ABC": "101", "ABC-": "110", "value": 0},
+    {"ABC": "101", "ABC-": "111", "value": 1},
+    {"ABC": "110", "ABC-": "000", "value": 0},
+    {"ABC": "110", "ABC-": "001", "value": 0},
+    {"ABC": "110", "ABC-": "010", "value": 0},
+    {"ABC": "110", "ABC-": "011", "value": 0},
+    {"ABC": "110", "ABC-": "100", "value": 1},
+    {"ABC": "110", "ABC-": "101", "value": 0},
+    {"ABC": "110", "ABC-": "110", "value": 0},
+    {"ABC": "110", "ABC-": "111", "value": 0},
+    {"ABC": "111", "ABC-": "000", "value": 0},
+    {"ABC": "111", "ABC-": "001", "value": 0},
+    {"ABC": "111", "ABC-": "010", "value": 0},
+    {"ABC": "111", "ABC-": "011", "value": 0},
+    {"ABC": "111", "ABC-": "100", "value": 0},
+    {"ABC": "111", "ABC-": "101", "value": 0},
+    {"ABC": "111", "ABC-": "110", "value": 1},
+    {"ABC": "111", "ABC-": "111", "value": 0}
+]
+actual = ["1","2"]
+futuro = ["2"]
 
-actualR = [0]
-futuroR = [1,2]
+"""
+1 cuando sgte valor es 0
+    si valor esta en actuales
+        agregamos en actuales todos los indices de los actuales menos el del valor
+        buscar valor en lista adyacencias
+        recorremos sus values y su valor correspndiente en indices se agrega a futuros
+    si valor esta en futuros
+        agregamos en futuros todos los indices del valor
+        si valor no esta en value agrego a actuales el indice de la key donde no estuvo el valor
+2 cuando sgte valor != 0
+    agregamos indices de futuros en futuro 
+    agregamos indices de actuales en actual
+"""
+
+actualR = ["1","2"]
+futuroR = ["0"]
 def procesar_matriz(matriz, actuales, futuros):
     resultados=[]
     esta_en_resultado = False
@@ -20,13 +99,13 @@ def procesar_matriz(matriz, actuales, futuros):
             #validacion para sacar llave futura y valor futuro
             if key[-1] == "-":
                 for idx in futuros:
-                    value_f = value_f + value[idx]
-                    futuro = futuro + key[idx]
+                    value_f = value_f + value[int(idx)]
+                    futuro = futuro + key[int(idx)]
             #validacion para sacar llave actual y valor actual
             if key[-1] != "-" and key != "value":
                 for idx in actuales:
-                    actual = actual + key[idx]
-                    value_a = value_a + value[idx]
+                    actual = actual + key[int(idx)]
+                    value_a = value_a + value[int(idx)]
             #validacion para sacar el valor de combinacion de estado actual dado estafo futuro
             elif key == "value":
                 value_ = value
@@ -146,6 +225,20 @@ def sorted_dict(dict):
     return nuevo_diccionario
 
 
+def separar_diccionario(diccionario):
+    # Separar en dos subconjuntos
+    con_valores = {k: v for k, v in diccionario.items() if v}
+    sin_valores = {k: v for k, v in diccionario.items() if not v}
+
+    # Crear las posiciones de los subconjuntos
+    posiciones_con_valores = {k: i for i, k in enumerate(con_valores.keys())}
+    posiciones_sin_valores = {k: i for i, k in enumerate(sin_valores.keys())}
+
+    # Unir los subconjuntos en un solo diccionario
+    posiciones_unidas = {**posiciones_con_valores, **posiciones_sin_valores}
+
+    return posiciones_unidas
+
 # Función para combinar y ordenar claves y valores
 def combine_and_sort_keys(data):
     sorted_data = []
@@ -176,8 +269,8 @@ resultados1 = procesar_matriz(TMP, actualR, futuroR)
 # print("Matriz restante:")
 # print(resultados1)
 matrix, costo = multiplicar_vectores(resultados, resultados1)
-# print("Resultado de la multiplicación matriz marginalizada y matriz restante:")
-# print(len(matrix), costo,matrix)
+print("Resultado de la multiplicación matriz marginalizada y matriz restante:")
+print(len(matrix), costo,matrix)
 resultado, costo = multiplicar_elementos(matrix, TMP)
 # print("Resultado de la comparacion con la matriz original:")
 sortedVector = combine_and_sort_keys(resultado)
