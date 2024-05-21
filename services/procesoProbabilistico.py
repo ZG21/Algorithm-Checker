@@ -181,7 +181,6 @@ def multiplicar_elementos(vector, TMP):
 def sorted_dict(dict):
     # Ordenar las claves alfabéticamente
     claves_ordenadas = sorted(dict.keys())
-
     # Función para ordenar las claves internamente y ajustar los valores
     def ordenar_clave_y_valor(clave, valor):
         # Si la clave contiene un guion, lo manejamos de manera especial
@@ -227,18 +226,93 @@ def combine_and_sort_keys(data):
     }
     for item in data:
         dict_part, valueData = item
+        combine_actual_key = ""
+        combine_actual_val = ""
+        combine_future_key = ""
+        combine_future_val = ""
+        actual_dic = {}
+        future_dic = {}
         # Filtrar las llaves que no terminan en un guión
         for key, value in dict_part.items():
             if key.endswith('-'):
-                dict_post_soted["future"][key] = value
+                dict_post_soted["actual"][key] = value
+                keys = dict_post_soted["actual"].keys()
+                nueva_cadena1 = "".join([combine_future_val, dict_post_soted["actual"][key]])
+                combine_future_val = nueva_cadena1
+                combine_future_key += ''.join(key).replace('-', '')
+                future_dic = {combine_future_key+"-": nueva_cadena1}
             else:
                 dict_post_soted["actual"][key] = value
+                keys = dict_post_soted["actual"].keys()
+                nueva_cadena = "".join([combine_actual_val, dict_post_soted["actual"][key]])
+                combine_actual_val = nueva_cadena
+                combine_actual_key += ''.join(key)
+                actual_dic = {combine_actual_key: nueva_cadena}
         sorted_data.append({
-            "actual":sorted_dict(dict_post_soted['actual']),
-            "future":sorted_dict(dict_post_soted['future']),
+            "actual":sorted_dict(actual_dic),
+            "future":sorted_dict(future_dic),
             "value": valueData
             })
     return sorted_data
+def state_To_Compare(TMP,state_to_compare):
+    estado_a_comparar = []
+    for element in TMP:
+        for key,val in element.items():
+            if key[-1] != "-" and key != "value" and val == state_to_compare[key]:
+                estado_a_comparar.append(element)
+    return estado_a_comparar
+
+def cut_edge_calculator(subsets, lista_adyacencia,position_dict):
+  future = {}
+  future_rest={}
+  actuales={}
+  actuales_rest = {}
+  futureInd = []
+  future_restInd = []
+  actualesInd = []
+  actuales_restInd = []
+  #print("Jeronimo values_by_subset_key", position_dict,lista_adyacencia)
+  for element in lista_adyacencia:
+      if len(subsets) == 2 and subsets[1] != 0:
+            values_by_subset_key = lista_adyacencia[f"{subsets[0]}"]
+            future = {key: value for key, value in position_dict["future"].items() if key in subsets}
+            future_rest = {key: value for key, value in position_dict["future"].items() if key not in subsets}
+            actuales = {key: value for key, value in position_dict["actual"].items() if key not in subsets}
+            actuales_rest = {key: value for key, value in position_dict["actual"].items() if key in subsets}
+
+  for key, val in future.items():
+      futureInd.append(f"{val}")
+  for key, val in future_rest.items():
+      future_restInd.append(f"{val}")
+  for key, val in actuales.items():
+      actualesInd.append(f"{val}")
+  for key, val in actuales_rest.items():
+      actuales_restInd.append(f"{val}")
+
+  result = {"subsets": subsets, "actual": actualesInd,  "future": futureInd, "future_rest":future_restInd, "actual_rest": actuales_restInd}
+  print(f"Jeronimo result {result}")
+  return result
+
+def earth_mover_distance(a, b):
+    # Encontrar la longitud máxima entre las dos listas
+    max_length = max(len(a), len(b))
+
+    # Rellenar las listas más cortas con objetos con valor 0 hasta que tengan el mismo tamaño
+    if len(a) < max_length:
+        print("In 1",max_length, len(a))
+        a.extend([{"value": 0}] * (max_length - len(a)))
+    if len(b) < max_length:
+        b.extend([{"value": 0}] * (max_length - len(b)))
+        print("In 2")
+
+    emd = [0] * max_length
+    total_distance = 0
+    print("emd",emd)
+    for i in range(1, max_length):
+        emd[i] = (a[i - 1]["value"] + emd[i - 1]) - b[i - 1]["value"]
+        total_distance += abs(emd[i])
+
+    return total_distance
 
 
 resultados = procesar_matriz(TMP, actual, futuro)
@@ -252,6 +326,6 @@ matrix, costo = multiplicar_vectores(resultados, resultados1)
 #print(len(matrix), costo,matrix)
 resultado, costo = multiplicar_elementos(matrix, TMP)
 # print("Resultado de la comparacion con la matriz original:")
-sortedVector = combine_and_sort_keys(resultado)
+#sortedVector = combine_and_sort_keys(resultado)
+print(f"Jeronimo combine_and_sort_keys {combine_and_sort_keys([[{'B': '1', 'B-': '1', 'AC': '11', 'AC-': '01'},0.0]])}")
 # print(len(resultado),sortedVector ,"\n",costo,resultado)
-
