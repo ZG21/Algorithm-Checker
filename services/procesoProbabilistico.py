@@ -115,31 +115,25 @@ def procesar_matriz(matriz, actuales, futuros):
             obj_global = [{actual: value_a, futuro + "-": value_f}, value_,1]
         else:
             obj_actual = {actual: value_a, futuro + "-": value_f}
-            #print(f"momo act{obj_actual},{value_} glob{obj_global}, idx_matriz: {idx_matriz} lm{len(matriz)}")
             if obj_actual == obj_global[0] and idx_matriz < len(matriz) - 1:
                 obj_global[1] = obj_global[1] + value_
                 obj_global[2] = obj_global[2] + 1
             else:
                 indice = buscar_indice(obj_global[0],resultados)
-                #print(f"matriz{idx_matriz} -> lenm{len(matriz)}")
 
-                #print("indice", indice)
                 if indice != -1:
                     # Si actual está en resultado, sumar su valor con el nuevo valor
                     resultados[indice][1] = resultados[indice][1] + obj_global[1]
                     resultados[indice][2] = resultados[indice][2] + obj_global[2]
-                    #print(f"Se sumó el valor{obj_global[1]} del elemento en resultado:", resultados)
                 else:
                     # Si actual no está en resultado, agregarlo
                     resultados.append(obj_global)
                 obj_global = [{actual: value_a, futuro + "-": value_f}, value_,1]
 
-                #print("Se agregó el elemento a resultado:", resultados)
     resultados = dividir_y_modificar(resultados)
     return resultados
 
 def buscar_indice(elemento, resultado):
-    #print("bi", elemento,resultado)
     for i, item in enumerate(resultado):
         if item[0] == elemento:
             return i
@@ -224,21 +218,6 @@ def sorted_dict(dict):
 
     return nuevo_diccionario
 
-
-def separar_diccionario(diccionario):
-    # Separar en dos subconjuntos
-    con_valores = {k: v for k, v in diccionario.items() if v}
-    sin_valores = {k: v for k, v in diccionario.items() if not v}
-
-    # Crear las posiciones de los subconjuntos
-    posiciones_con_valores = {k: i for i, k in enumerate(con_valores.keys())}
-    posiciones_sin_valores = {k: i for i, k in enumerate(sin_valores.keys())}
-
-    # Unir los subconjuntos en un solo diccionario
-    posiciones_unidas = {**posiciones_con_valores, **posiciones_sin_valores}
-
-    return posiciones_unidas
-
 # Función para combinar y ordenar claves y valores
 def combine_and_sort_keys(data):
     sorted_data = []
@@ -269,11 +248,10 @@ resultados1 = procesar_matriz(TMP, actualR, futuroR)
 # print("Matriz restante:")
 # print(resultados1)
 matrix, costo = multiplicar_vectores(resultados, resultados1)
-print("Resultado de la multiplicación matriz marginalizada y matriz restante:")
-print(len(matrix), costo,matrix)
+#print("Resultado de la multiplicación matriz marginalizada y matriz restante:")
+#print(len(matrix), costo,matrix)
 resultado, costo = multiplicar_elementos(matrix, TMP)
 # print("Resultado de la comparacion con la matriz original:")
 sortedVector = combine_and_sort_keys(resultado)
-print(f"Jeronimo sortedVector: {sortedVector}")
 # print(len(resultado),sortedVector ,"\n",costo,resultado)
 
