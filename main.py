@@ -39,6 +39,7 @@ def IsBipartition(state: str,value: str):
 
     # Ordenar la lista de objetos por el valor de la llave "value"
     subsetSorted = sorted(subsets, key=comparar_por_valor)
+    print("Subsets",subsetSorted)
     cost_delete_edge = []
     #2 parte taller 3
     for element in subsetSorted:
