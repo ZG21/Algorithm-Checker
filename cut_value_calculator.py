@@ -2,7 +2,6 @@ import random
 
 import copy
 def cut_value_calculator(subsets, lista_adyacencia, idx,position_dict):
-    #print("MOMO add", position_dict, "\n", lista_adyacencia, "\n", subsets,"\n",idx)
     result = {}
     actual = {}
     actual_rest = {}
