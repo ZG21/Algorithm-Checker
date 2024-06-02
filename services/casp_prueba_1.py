@@ -280,7 +280,6 @@ def cut_edge_calculator(subsets, lista_adyacencia,position_dict):
     future_restInd = []
     actualesInd = []
     actuales_restInd = []
-    #print(" values_by_subset_key", position_dict,lista_adyacencia)
     for element in lista_adyacencia:
         if len(subsets) == 2 and subsets[1] != 0:
                 values_by_subset_key = lista_adyacencia[f"{subsets[0]}"]
@@ -299,7 +298,6 @@ def cut_edge_calculator(subsets, lista_adyacencia,position_dict):
         actuales_restInd.append(f"{val}")
 
     result = {"subsets": subsets, "actual": actualesInd,  "future": futureInd, "future_rest":future_restInd, "actual_rest": actuales_restInd}
-    # print(f" result {result}")
     return result
 
 def earth_mover_distance(a, b):
@@ -308,15 +306,12 @@ def earth_mover_distance(a, b):
 
     # Rellenar las listas más cortas con objetos con valor 0 hasta que tengan el mismo tamaño
     if len(a) < max_length:
-        # print("In 1",max_length, len(a))
         a.extend([{"value": 0}] * (max_length - len(a)))
     if len(b) < max_length:
         b.extend([{"value": 0}] * (max_length - len(b)))
-        # print("In 2")
 
     emd = [0] * max_length
     total_distance = 0
-    # print("emd",emd)
     for i in range(1, max_length):
         emd[i] = (a[i - 1]["value"] + emd[i - 1]) - b[i - 1]["value"]
         total_distance += abs(emd[i])
@@ -325,7 +320,6 @@ def earth_mover_distance(a, b):
 
 lista = convertir_a_lista_de_adyacencia(graph)
 position_dict = separar_dict_y_crear_posiciones(lista)
-# print(f"momo lista-> {lista} {position_dict}")
 
 # # ABCDFt+1|ABCDFt
 # print("1 ABCDFt+1|ABCDFt")
@@ -429,17 +423,14 @@ def comparar_por_valor(objeto):
 # costo = earth_mover_distance(estado_a_comparar, estado_original)
 
 subsetSorted = sorted(matrix[1], key=comparar_por_valor)
-print("subsetSorted",subsetSorted)
 
 cost_delete_edge = []
 #2 parte taller 3
 for element in subsetSorted:
-    print("Inicioparte2",element)
     for key, val in element.items():
         if key == "subsets" and len(val) == 2 and val[1] != "0":
 
             cut_edge_calculator(val,lista,position_dict)
-            print("Parte2",cut_edge_calculator(val,lista,position_dict))
             actuales = cut_edge_calculator(val,lista,position_dict)[
                 "actual"]
             actualesR = cut_edge_calculator(val,lista,position_dict)[
@@ -461,15 +452,12 @@ for element in subsetSorted:
             result2 = cut_edge_calculator(val,lista,position_dict)
             result2["costo"] = costo
             cost_delete_edge.append(result2)
-            print("Resultado:",cost_delete_edge)
 
 def comparar_por_valor(objeto):
     return objeto["costo"]
 
 # Ordenar la lista de objetos por el valor de la llave "value"
 Result_cost_edges_sorted = sorted(cost_delete_edge, key=comparar_por_valor)
-print("Result_cost_edges_sorted",Result_cost_edges_sorted)
 end_time = time.time()
 
 # execution_time = end_time - start_time
-# print("Valor de pérdida",costo,f"\n Distribución de probabilidades: {estado_a_comparar} \n Tiempo de ejecución: {execution_time} segundos")

@@ -9,28 +9,60 @@ from Subsets import add_subsets
 
 import logging
 from GraphsExaples import graph1
+from itertools import product
 
 logger = logging.getLogger("myapp")
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
+def generatorComb(n):
+    # Generar todas las combinaciones binarias de longitud n
+    combinaciones = list(product([0, 1], repeat=n))
+    # Crear la clave dinámica con letras del alfabeto
+    clave = ",".join(chr(65 + i) for i in range(n))  # 65 es el código ASCII de 'A'
+    # Formatear el resultado como un diccionario
+    resultado = {
+        clave: [list(combinacion) for combinacion in combinaciones]
+    }
+    return resultado
 
-@app.get("/bipartition-and-calculeProbality/{state}/{value}")
-def IsBipartition(state: str,value: str):
-    estado_actual = {state: value}
+def generate_full_matrix(nodes_matrix, len_graph):
+    # Extraer la matriz de combinaciones binarias
+    var_matrix = list(var_matrix.values())[0]
+    # Crear la matriz completa
+    full_matrix = []
+    # Iterar sobre cada matriz de nodos en nodes_matrix
+    for node_key, node_matrix in nodes_matrix.items():
+        if len(node_matrix) != len(var_matrix):
+            raise ValueError(f"El tamaño de la matriz de nodos para '{node_key}' no coincide con el tamaño de var_matrix")
+        # Crear filas combinando var_matrix con la matriz de nodos correspondiente
+        for i in range(len(var_matrix)):
+            full_matrix.append(var_matrix[i] + node_matrix[i])
+    return full_matrix
+
+@app.get("/bipartition-and-calculeProbality")
+def IsBipartition():
+    # estado_actual = {state: value}
     graph = dict()
     logger.info("Accediendo a la ruta raíz")
     graph = graph1
     logger.info(f"Marlon components graph : ")
+    print(f"Jeronimo components graph : {graph1}")
+    print(f"Jeronimo generate comb: {generatorComb(graph['nodesNumber'])}")
+    var_matrix = generatorComb(graph['nodesNumber'])
+    nodes_matrix = {
+        "A": [[1,0],[0,1],[0,1],[0,1]],
+        "B": [[1,0],[1,0],[0,1],[1,0]]
+    }
+    test = generate_full_matrix(nodes_matrix, graph['nodesNumber'])
     lista_adyacencia = convertir_a_lista_de_adyacencia(graph1)
     position_dict = separar_dict_y_crear_posiciones(lista_adyacencia)
     subsets = []
     subsets_iteration = []
     for key, values in lista_adyacencia.items():
-        subsets = add_subsets(key, values, subsets_iteration, lista_adyacencia,position_dict, estado_actual)
-        #print("Momo sI",subsets_iteration)
-        #print("momo TMP", TMP)
+        print(f"Jeronimo key: {key}")
+        # subsets = add_subsets(key, values, subsets_iteration, lista_adyacencia,position_dict, estado_actual)
         #procesar_matriz(TMP,subsets_iteration.)
 
     # Función de comparación para ordenar por el valor de la llave "value"
@@ -39,16 +71,13 @@ def IsBipartition(state: str,value: str):
 
     # Ordenar la lista de objetos por el valor de la llave "value"
     subsetSorted = sorted(subsets, key=comparar_por_valor)
-    print("Subsets",subsetSorted)
     cost_delete_edge = []
     #2 parte taller 3
     for element in subsetSorted:
-        print("Inicioparte2",element)
         for key, val in element.items():
             if key == "subsets" and len(val) == 2 and val[1] != "0":
 
                 cut_edge_calculator(val,lista_adyacencia,position_dict)
-                print("Parte2",cut_edge_calculator(val,lista_adyacencia,position_dict))
                 actuales = cut_edge_calculator(val,lista_adyacencia,position_dict)[
                     "actual"]
                 actualesR = cut_edge_calculator(val,lista_adyacencia,position_dict)[
@@ -70,7 +99,6 @@ def IsBipartition(state: str,value: str):
                 result2 = cut_edge_calculator(val,lista_adyacencia,position_dict)
                 result2["costo"] = costo
                 cost_delete_edge.append(result2)
-                print("Resultado:",cost_delete_edge)
 
     def comparar_por_valor(objeto):
         return objeto["costo"]

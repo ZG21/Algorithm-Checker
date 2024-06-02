@@ -271,7 +271,6 @@ def cut_edge_calculator(subsets, lista_adyacencia,position_dict):
   future_restInd = []
   actualesInd = []
   actuales_restInd = []
-  #print("Jeronimo values_by_subset_key", position_dict,lista_adyacencia)
   for element in lista_adyacencia:
       if len(subsets) == 2 and subsets[1] != 0:
             values_by_subset_key = lista_adyacencia[f"{subsets[0]}"]
@@ -290,7 +289,6 @@ def cut_edge_calculator(subsets, lista_adyacencia,position_dict):
       actuales_restInd.append(f"{val}")
 
   result = {"subsets": subsets, "actual": actualesInd,  "future": futureInd, "future_rest":future_restInd, "actual_rest": actuales_restInd}
-  print(f"Jeronimo result {result}")
   return result
 
 def earth_mover_distance(a, b):
@@ -299,15 +297,12 @@ def earth_mover_distance(a, b):
 
     # Rellenar las listas más cortas con objetos con valor 0 hasta que tengan el mismo tamaño
     if len(a) < max_length:
-        print("In 1",max_length, len(a))
         a.extend([{"value": 0}] * (max_length - len(a)))
     if len(b) < max_length:
         b.extend([{"value": 0}] * (max_length - len(b)))
-        print("In 2")
 
     emd = [0] * max_length
     total_distance = 0
-    print("emd",emd)
     for i in range(1, max_length):
         emd[i] = (a[i - 1]["value"] + emd[i - 1]) - b[i - 1]["value"]
         total_distance += abs(emd[i])
@@ -316,16 +311,6 @@ def earth_mover_distance(a, b):
 
 
 resultados = procesar_matriz(TMP, actual, futuro)
-# print("Matriz marginalizada:")
-# print(len(resultados), resultados)
 resultados1 = procesar_matriz(TMP, actualR, futuroR)
-# print("Matriz restante:")
-# print(resultados1)
 matrix, costo = multiplicar_vectores(resultados, resultados1)
-#print("Resultado de la multiplicación matriz marginalizada y matriz restante:")
-#print(len(matrix), costo,matrix)
 resultado, costo = multiplicar_elementos(matrix, TMP)
-# print("Resultado de la comparacion con la matriz original:")
-#sortedVector = combine_and_sort_keys(resultado)
-print(f"Jeronimo combine_and_sort_keys {combine_and_sort_keys([[{'B': '1', 'B-': '1', 'AC': '11', 'AC-': '01'},0.0]])}")
-# print(len(resultado),sortedVector ,"\n",costo,resultado)
