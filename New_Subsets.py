@@ -2,22 +2,30 @@ import copy
 def get_actuals_to_evaluate(componente, entry):
     #print("comp act",componente)
     actuals = []
+    position_rest = []
     for key, value in entry.items():
         if key not in componente[1]:
           actuals.insert(0,value["position"])
+        else:
+            position_rest.insert(0,value["position"])
     if len(actuals) == 0:
         actuals.append("0")
-    return actuals
+    return actuals, position_rest
 
 def get_actuals_to_marginalize(componente, entry):
     #print("comp act",componente)
+    position_rest = []
+    
     actuals = []
     for key, value in entry.items():
         if key in componente[1]:
           actuals.insert(0,value["position"])
+        else:
+            position_rest.insert(0,value["position"])
     if len(actuals) == 0:
         actuals.append("0")
-    return actuals
+    return actuals, position_rest
+
 def get_futures_to_evaluate(componente, entry):
     #print("comp future", componente)
     futures = {}
@@ -118,7 +126,8 @@ def generate_full_combs(component):
         for comb2 in denominadores:
             if len(comb) == 1 and len(comb2) == 1:
                 vacios = generar_parejas_vacio(comb, vacios)
-            full_comb.append([comb, comb2])
+            if not(comb == component[0] and comb2 == component[1]):
+                full_comb.append([comb, comb2])
 
     full_comb.extend(vacios)
     return full_comb
@@ -144,8 +153,11 @@ entrada = {
 componente = [["a","b"],["a","b"]]
 futures_to_evaluate = {}
 original_matrix = {}
+full_rows = 2**len(componente[0])
+print("Jeronimo full_rows", full_rows)
 futures_to_evaluate = get_futures_to_evaluate(componente, entrada)
-actual_position_to_omit = get_actuals_to_evaluate(componente, entrada)
+actual_position_to_omit, pos_r = get_actuals_to_evaluate(componente, entrada)
+print(f"Jeronimo position_r: {pos_r}  ")
 for pos in actual_position_to_omit:
     if len(original_matrix) == 0:
         original_matrix = marginalize_matrix(futures_to_evaluate, pos)
@@ -154,7 +166,7 @@ for pos in actual_position_to_omit:
 print(f"jeronimo original_matrix: {original_matrix}")
 
 combs = generate_full_combs(componente)
-memory = []
-for element in combs:
-    calculate_cost_component(element, entrada,original_matrix, memory)
+# memory = []
+# for element in combs:
+#     calculate_cost_component(element, entrada,original_matrix, memory)
 
