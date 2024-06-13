@@ -1,17 +1,11 @@
-from services.earth_mover_distance import earth_mover_distance
-from services.prod_tensor import tensor_full_mat
 from services.search_component_in_memory import search_component_in_memory
-from services.get_futures_to_evaluate import get_futures_to_evaluate
 from services.get_actuals import get_actuals_to_evaluate, get_actuals_to_marginalize
-from services.marginalized_process import marginalizar_vacios, marginalize_matrix
-from services.generate_full_combs import generate_full_combs
+from services.get_futures_to_evaluate import get_futures_to_evaluate
+from services.marginalized_process import marginalize_matrix,marginalizar_vacios
 from services.expand_matrix import expand_matrix
-from services.obtener_complemento import obtener_complemento
-from services.prod_tensor import producto_tensor, vector_to_emd
-from services.filtrar_componentes_repetidos import filtrar_componentes_repetidos
+from services.generate_full_combs import generate_full_combs
 
-
-def calculate_cost_component(component, componente_original, new_entry, memory, state,entrada):
+def calculate_cost_component(component, componente_original, new_entry, memory, state,entrada, componente):
     print(f"--------------componente {component} {componente_original}----------------------------")
     #print(f"--------------new entry {new_entry}----------------------------")
     result_empty = {}
@@ -171,124 +165,3 @@ def calculate_cost_component(component, componente_original, new_entry, memory, 
     # Obtenemos el valor segun el estado para el complemento y el componente
     # Hacemos prod tensor complemento y componente en ese estado
     # (NO SE) Hacemos EMD con la extended matrix en ese estado
-
-# TODO Ortanizar el código en funciones separadas
-
-
-
-
-def final_process( extended_matrix, memory, state, entrada, element, componente, emd_memory, component_original):
-    #print("rarezas component: ", component_original)
-    # Obtenemos el componente
-    subset_in_memory = search_component_in_memory(memory, element)
-    # Obtenemos el complemento
-    result_emd= 0
-    complement = obtener_complemento(componente, element)
-    complementSubset_in_memory = search_component_in_memory(memory, subset_in_memory)
-    result_subcomponent = {}
-    result_comple_memory = {}
-    # SI el complemento cumple estas condiciones de genera una k-particion
-    if not ((len(complement[0])>1 and (complement[0][0] == "0")) or (len(complement[1])>1 and (complement[1][0] == "0"))):
-        if len(subset_in_memory) == 0:
-            result_subcomponent = calculate_cost_component(element, componente, extended_matrix, memory, state, entrada)
-            memory.append(result_subcomponent)
-        else:
-            result_subcomponent = subset_in_memory
-        if len(complementSubset_in_memory) == 0:
-            result_subcomplement = calculate_cost_component(complement, componente, extended_matrix, memory, state, entrada)
-            result_subcomplement_in_memory = search_component_in_memory(memory,result_subcomplement["componente"])
-            if len(result_subcomplement_in_memory) == 0:
-                memory.append(result_subcomplement)
-                result_comple_memory = result_subcomplement
-            else:
-                result_comple_memory = result_subcomplement_in_memory
-        else:
-            result_comple_memory = complementSubset_in_memory
-        result = producto_tensor(result_comple_memory,result_subcomponent)
-        cut_one = result_subcomponent["componente"]
-        cut_two =  result_comple_memory["componente"]
-        if cut_one != cut_two:
-            final_cut_tensor = producto_tensor(result,result_comple_memory)
-            vector_tensor = vector_to_emd(final_cut_tensor["resultado"], state)
-            vector_original_component = vector_to_emd(component_original["resultado"],state)
-            result_emd = earth_mover_distance(vector_tensor, vector_original_component)
-            print(f"CORTES cut_one:{cut_one} cut_two: {cut_two}")
-            print(f"RESULTADO FINAL {result_emd}")
-            if len(emd_memory) == 0:
-                emd_memory["cortes"] = [cut_one,cut_two]
-                emd_memory["resultado"] = result_emd
-            else:
-                if emd_memory["resultado"] > result_emd:
-                    print("ACTUALIZAAAAA\n")
-                    emd_memory["cortes"] = [cut_one,cut_two]
-                    emd_memory["resultado"] = result_emd
-                else:
-                    print("NO COMPARAAA")
-        
-        #Proceso para EMD
-        #Producto tensor entre las componen
-        print("RESULT EMD", component_original, "\n componente", result )
-        
-        print(f"MOMO !!!! Component {result_subcomponent}\nComplement {result_subcomplement}")
-
-
-entrada = {
-    "a": {
-        "combinaciones": [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0], [0, 0, 1], [1, 0, 1], [0, 1, 1], [1, 1, 1]],
-        "valores": [[0, 1], [1, 0], [0, 1], [1, 0], [1, 0], [0, 1], [1, 0], [1, 0]],
-        "position": 0
-    },
-    "b": {
-        "combinaciones": [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0], [0, 0, 1], [1, 0, 1], [0, 1, 1], [1, 1, 1]],
-        "valores": [[0, 1], [1, 0], [0, 1], [1, 0], [1, 0], [0, 1], [0, 1], [1, 0]],
-        "position": 1
-    },
-    "c": {
-        "combinaciones": [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0], [0, 0, 1], [1, 0, 1], [0, 1, 1], [1, 1, 1]],
-        "valores": [[0, 1], [1, 0], [0, 1], [0, 1], [1, 0], [1, 0], [1, 0], [1, 0]],
-        "position": 2
-    }
-}
-# Componente ab/ab
-componente = [["a", "b","c"], ["a", "b","c"]]
-futures_to_evaluate = {}
-component_matrix = {}
-state = [0, 0, 0]
-futures_to_evaluate = get_futures_to_evaluate(componente, entrada)
-actual_position_to_omit, pos_r = get_actuals_to_evaluate(componente, entrada)
-for pos in actual_position_to_omit:
-    if len(component_matrix) == 0:
-        component_matrix = marginalize_matrix(futures_to_evaluate, pos)
-    else:
-        component_matrix = marginalize_matrix(component_matrix, pos)
-extended_matrix = expand_matrix(component_matrix, entrada, pos_r)
-component_original = tensor_full_mat(extended_matrix, componente, entrada)
-combs = generate_full_combs(componente)
-memory = []
-print(f"EXTENDED MAT: {extended_matrix}\n")
-
-emd_memory = {}
-
-for element in combs:
-    str_elem_future = "".join(element[0])
-    str_elem_actual = "".join(element[1])
-    print("ELEEEEMEEEENTOOOOO",element)
-    memory = filtrar_componentes_repetidos(memory)
-    if len(emd_memory) == 0:
-        final_process(extended_matrix,memory,state,entrada,element,componente,emd_memory, component_original)
-    else:
-        if emd_memory["resultado"] != 0:
-            for corte in emd_memory["cortes"]:
-                str_cut_future = "".join(corte[0])
-                str_cut_actual = "".join(corte[1])
-                print(f"Parametros str_elem_future {str_elem_future} \n str_elem_actual {str_elem_actual} \n str_cut_future {str_cut_future} \n str_cut_actual {str_cut_actual} ")
-                if not (str_cut_actual in str_elem_actual and str_cut_future in str_elem_future):
-                    print("INNNNN",emd_memory, element)
-                    final_process(extended_matrix,memory,state,entrada,element,componente,emd_memory,component_original)
-    # producto_tensor(result_subcomponent,result_complement)
-    # # Obtenemos el valor segun el estado para el complemento y el componente
-    # # Hacemos prod tensor complemento y componente en ese estado
-    # # Hacemos EMD con la extended matrix en ese estado
-
-print("MEMORIA:", memory)
-print("MEMORIA EMD:", emd_memory)
