@@ -30,8 +30,7 @@ def add_subsets(key, values, current_subsets, graph):
     if not values:
         return
     for value in values:
-        subsetAlgo = [[key], [value]]  # Cada elemento es una lista
+        subsetAlgo = [[value], [key]]  # Cada elemento es una lista
         result = calculate_subset(subsetAlgo, graph, 0)
         if result:  # Asegurarnos de que result no sea None
             current_subsets.append(result)
-            print(f"Added subset: {subsetAlgo}")
