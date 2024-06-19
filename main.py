@@ -1,11 +1,11 @@
 from typing import Union
 from fastapi import FastAPI
 from services.IsBipartitionGraph import find_components_and_check_bipartite,convertir_a_lista_de_adyacencia
-from Subsets import separar_dict_y_crear_posiciones
+from services.Subsets import separar_dict_y_crear_posiciones
 from services.procesoProbabilistico import cut_edge_calculator, procesar_matriz,TMP,earth_mover_distance,state_To_Compare,multiplicar_vectores,combine_and_sort_keys
 
 
-from Subsets import add_subsets
+from services.Subsets import add_subsets
 
 import logging
 from GraphsExaples import graph1

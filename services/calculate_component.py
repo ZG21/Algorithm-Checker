@@ -6,7 +6,6 @@ from services.expand_matrix import expand_matrix
 from services.generate_full_combs import generate_full_combs
 
 def calculate_cost_component(component, componente_original, new_entry, memory, state,entrada, componente):
-    print(f"--------------componente {component} {componente_original}----------------------------")
     #print(f"--------------new entry {new_entry}----------------------------")
     result_empty = {}
     pos_res = []

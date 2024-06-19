@@ -4,7 +4,6 @@ import copy
 def expand_matrix(matrix_marginalized, matrix_original, positions_rest):
     copy_matrix_original = {}
     copy_matrix_marginalized = {}
-    print(f"EXPAND MAT matrix_marginalized {matrix_marginalized} \n matrix_original {matrix_original} \n positions_rest {positions_rest}")
     # Recorrer la matriz marginalizada
     for key, value in matrix_marginalized.items():
         # Tomamos de la entrada anterior a la matriz marginalizada como matriz original

@@ -26,7 +26,6 @@ def marginalize_matrix(matrix, position):
                 nuevos_valores.append(sumar_vectores(value['valores'][i], value['valores'][i + next_position]))
             elif i == len(clon_comb) - 1:
                 new_matrix[key] = {"combinaciones": nuevas_combinaciones, "valores": nuevos_valores,"position": value['position']}
-    print(f"MATRIX MARGINALIZADA", new_matrix)
     return new_matrix
 
 
